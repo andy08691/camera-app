@@ -23,7 +23,9 @@
 		    
 		    <!-- Camera output -->
 		    <img src="//:0" alt="" id="camera--output">
-			<input type="file" accept="image/*" capture="user">
+		    <form enctype="multipart/form-data" method="post">
+      			<input type="file" accept="image/*" capture="environment">
+  		    </form>
 
 		    <!-- Camera trigger -->
 		    <button id="camera--trigger">Take a picture</button>
