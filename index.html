@@ -1,38 +1,32 @@
-<html lang=”en”>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!DOCTYPE html>
+<html lang="zh-tw">
 
-		<!-- Name of the app -->
-		<title>Camera App</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>instascan：純前端掃描 QR Code</title>
+    <script src="instascan.min.js"></script>
+</head>
 
-		<!-- Link to main style sheet -->
-		<link rel="stylesheet" href="style.css"> 
-	</head>
-	<body>
+<body>
+    <video width="320" height="240" id="preview"></video>
 
-		<!-- Camera -->
-		<main id="camera">
+    <script>
+        document.addEventListener("DOMContentLoaded", event => {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+            Instascan.Camera.getCameras().then(cameras => {
+                scanner.camera = cameras[cameras.length - 1];
+                scanner.start();
+            }).catch(e => console.error(e));
 
-		    <!-- Camera sensor -->
-		    <canvas id="camera--sensor"></canvas>
-		    
-		    <!-- Camera view -->
-		    <video id="camera--view" autoplay playsinline></video>
-		    
-		    <!-- Camera output -->
-		    <img src="//:0" alt="" id="camera--output">
-		    <form enctype="multipart/form-data" method="post">
-      			<input type="file" accept="image/*" capture="environment">
-  		    </form>
+            scanner.addListener('scan', content => {
+                console.log(content);
+            });
 
-		    <!-- Camera trigger -->
-		    <button id="camera--trigger">Take a picture</button>
+        });
 
-		</main>
+    </script>
+</body>
 
-		<!-- Reference to your JavaScript file -->
-		<script src="app.js"></script> 
-	</body>
 </html>
