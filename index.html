@@ -17,9 +17,7 @@
             video: document.getElementById('preview'), // 預覽
             facingMode: {
                 exact: "environment"
-            },
-            refractoryPeriod: 1000,
-            scanPeriod: 1
+            }
         });
         scanner.addListener('scan', function (content) {
 
