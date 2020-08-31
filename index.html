@@ -13,12 +13,12 @@
    <video id="webcam-preview"></video>
 <p id="result"></p>
 <script>
-  const codeReader = new ZXing.BrowserQRCodeReader();
+  const codeReader = new ZXing.BrowserBarcodeReader();
 
   codeReader.decodeFromVideoDevice(null, 'webcam-preview', (result, err) => {
     if (result) {
       // properly decoded qr code
-      console.log('Found QR code!', result)
+      console.log('Found Barcode code!', result)
       document.getElementById('result').textContent = result.text
     }
 
@@ -34,7 +34,7 @@
       //  - FormatException
 
       if (err instanceof ZXing.NotFoundException) {
-        console.log('No QR code found.')
+        console.log('No Barcode code found.')
       }
 
       if (err instanceof ZXing.ChecksumException) {
