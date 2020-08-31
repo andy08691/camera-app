@@ -6,49 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>instascan：純前端掃描 QR Code</title>
-    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
 </head>
 
 <body>
-    <video width="320" height="240" id="preview"></video>
-    <script type="text/javascript">
-        let scanner = new Instascan.Scanner({
-            continuous: true, // 連續掃描
-            video: document.getElementById('preview'), // 預覽
-            facingMode: {
-                exact: "environment"
-            }
-        });
-        scanner.addListener('scan', function (content) {
+   <video id="webcam-preview"></video>
+<p id="result"></p>
+<script>
+  const codeReader = new ZXing.BrowserQRCodeReader();
 
-            console.log(content);
-            getConfirmation();
+  codeReader.decodeFromVideoDevice(null, 'webcam-preview', (result, err) => {
+    if (result) {
+      // properly decoded qr code
+      console.log('Found QR code!', result)
+      document.getElementById('result').textContent = result.text
+    }
 
-            function getConfirmation() {
-                var retVal = confirm("掃描結果：" + content); // 掃描結果顯示
-                if (retVal == true) {
-                    var checkurl = /^((https?|http?|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/; // 檢查是否為網址
-                    if (checkurl.test(content)) {
-                        window.open(content, "_self"); // 開啟網址
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+    if (err) {
+      // As long as this error belongs into one of the following categories
+      // the code reader is going to continue as excepted. Any other error
+      // will stop the decoding loop.
+      //
+      // Excepted Exceptions:
+      //
+      //  - NotFoundException
+      //  - ChecksumException
+      //  - FormatException
 
+      if (err instanceof ZXing.NotFoundException) {
+        console.log('No QR code found.')
+      }
 
-        });
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                scanner.start(cameras[1]); // [0] 前鏡頭 [1] 後鏡頭 
-            } else {
-                console.error('沒有找到相機');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
-    </script>
+      if (err instanceof ZXing.ChecksumException) {
+        console.log('A code was found, but it\'s read value was not valid.')
+      }
+
+      if (err instanceof ZXing.FormatException) {
+        console.log('A code was found, but it was in a invalid format.')
+      }
+    }
+  })
+</script>
 
 </body>
 
