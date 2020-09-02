@@ -21,6 +21,22 @@
       console.log('Found Barcode code!', result)
       var retVal = confirm("掃描結果：" + result); // 掃描結果顯示
       document.getElementById('result').textContent = result.text
+      if(retVal == true){
+        codeReader.reset()
+        setTimeout(function(){ 
+                    codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+              if (result) {
+                console.log(result)
+                document.getElementById('result').textContent = result.text
+              }
+              if (err && !(err instanceof ZXing.NotFoundException)) {
+                console.error(err)
+                document.getElementById('result').textContent = err
+              }
+            })
+        }, 500);
+      }
+      
     }
 
     if (err) {
